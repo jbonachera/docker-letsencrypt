@@ -9,7 +9,7 @@ fi
 cd /etc/letsencrypt/
 while [ true ]; do
   for name in ${COMMON_NAMES}; do
-    /usr/local/bin/letsencrypt.sh -c -d ${COMMON_NAMES} -t http-01
+    /usr/local/bin/dehydrated --config /etc/letsencrypt/config.sh -c -d ${COMMON_NAMES} -t http-01
   done
   sleep 10d
 done
