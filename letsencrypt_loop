@@ -1,5 +1,6 @@
 #!/bin/bash
 
+[ ! -d $WELLKNOWN ] && mkdir -p $WELLKNOWN
 if [ ! -f /etc/letsencrypt/config.sh ]; then
   if [ -n "$CA" ]; then
   echo "CA=$CA" >> /etc/letsencrypt/config.sh
@@ -7,9 +8,9 @@ if [ ! -f /etc/letsencrypt/config.sh ]; then
   echo "WELLKNOWN=$WELLKNOWN" >> /etc/letsencrypt/config.sh
 fi
 cd /etc/letsencrypt/
-while [ true ]; do
-  for name in ${COMMON_NAMES}; do
-    /usr/local/bin/dehydrated --config /etc/letsencrypt/config.sh -c -d ${COMMON_NAMES} -t http-01
+while true; do
+  for name in $( echo ${COMMON_NAMES} |tr ',' ' '); do
+    /usr/local/bin/dehydrated --config /etc/letsencrypt/config.sh -c -d ${name} -t http-01
   done
   sleep 10d
 done
