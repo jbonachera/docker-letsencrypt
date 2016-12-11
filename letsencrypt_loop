@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CHALLENGE=${CHALLENGE:-"http-01"}
+
 [ ! -d $WELLKNOWN ] && mkdir -p $WELLKNOWN
 if [ ! -f /etc/letsencrypt/config.sh ]; then
   if [ -n "$CA" ]; then
@@ -10,7 +12,11 @@ fi
 cd /etc/letsencrypt/
 while true; do
   for name in $( echo ${COMMON_NAMES} |tr ',' ' '); do
-    /usr/local/bin/dehydrated --config /etc/letsencrypt/config.sh -c -d ${name} -t http-01
+    args=" --config /etc/letsencrypt/config.sh --challenge $CHALLENGE -c -d ${name}"
+    if [ "$CHALLENGE" == "dns-01" ]; then
+        args="$args --hook /usr/local/bin/hook-nsupdate.sh"
+    fi
+    /usr/local/bin/dehydrated $args
   done
   sleep 10d
 done
