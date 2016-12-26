@@ -16,7 +16,8 @@ NSUPDATE="nsupdate"
 #KEY_NAME
 #KEY
 TTL=0
-
+ZONE=$(echo ${2} | rev | cut -d '.' -f 2,1 | rev)
+echo "Targeting zone $ZONE"
 case "$1" in
     "deploy_challenge")
         printf "key $KEY_ALG:$KEY_NAME $KEY\nserver %s\nzone %s.\nupdate add _acme-challenge.%s. %d in TXT \"%s\"\nsend\n" "${DNSSERVER}" "${ZONE}" "${2}" "${TTL}" "${4}" | $NSUPDATE

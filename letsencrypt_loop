@@ -10,13 +10,15 @@ if [ ! -f /etc/letsencrypt/config.sh ]; then
   echo "WELLKNOWN=$WELLKNOWN" >> /etc/letsencrypt/config.sh
 fi
 cd /etc/letsencrypt/
+echo > domains.txt
+for name in $( echo ${COMMON_NAMES} |tr ',' ' '); do
+    echo "${name} ${ALTERNATIVE_NAMES}" >> domains.txt 
+done
 while true; do
-  for name in $( echo ${COMMON_NAMES} |tr ',' ' '); do
-    args=" --config /etc/letsencrypt/config.sh --challenge $CHALLENGE -c -d ${name}"
+    args=" --config /etc/letsencrypt/config.sh --challenge $CHALLENGE -c"
     if [ "$CHALLENGE" == "dns-01" ]; then
         args="$args --hook /usr/local/bin/hook-nsupdate.sh"
     fi
     /usr/local/bin/dehydrated $args
-  done
-  sleep 10d
+    sleep 10d
 done
