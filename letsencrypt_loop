@@ -17,7 +17,7 @@ done
 while true; do
     args=" --config /etc/letsencrypt/config.sh --challenge $CHALLENGE -c"
     if [ "$CHALLENGE" == "dns-01" ]; then
-        args="$args --hook /usr/local/src/cloudflare/hook.py"
+        args="$args --hook /usr/local/src/hooks/cloudflare/hook.py"
     fi
     /usr/local/bin/dehydrated $args
     sleep 10d
